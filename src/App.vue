@@ -1,17 +1,17 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Board msg="Welcome to Tiny Trello Web App"/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import Board from './components/Board.vue'
 
-export default {
+  export default {
   name: 'app',
   components: {
-    HelloWorld
+    Board
   }
 }
 </script>
