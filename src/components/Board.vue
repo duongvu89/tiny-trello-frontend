@@ -1,11 +1,11 @@
 <template>
   <div class="board-container">
     <div class="board">
-      <Column name="TO DO" :key="1" :cards="todoCards">
+      <Column :cards="todoCards" :key="1" name="TO DO" status="TODO">
       </Column>
-      <Column name="DOING" :key="2" :cards="doingCards">
+      <Column :cards="doingCards" :key="2" name="DOING" status="DOING">
       </Column>
-      <Column name="DONE" :key="3" :cards="doneCards">
+      <Column :cards="doneCards" :key="3" name="DONE" status="DONE">
       </Column>
     </div>
 
@@ -25,15 +25,15 @@
     },
     computed: {
       todoCards: function () {
-        if (!this.cards) return;
+        if (!this.cards) return [];
         return this.cards.filter(card => card.status === 'TODO');
       },
       doingCards: function () {
-        if (!this.cards) return;
+        if (!this.cards) return [];
         return this.cards.filter(card => card.status === 'DOING');
       },
       doneCards: function () {
-        if (!this.cards) return;
+        if (!this.cards) return [];
         return this.cards.filter(card => card.status === 'DONE');
       },
     },

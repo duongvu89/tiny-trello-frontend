@@ -1,8 +1,6 @@
 <template>
   <div class="card">
-    <div>
       <p class="card-description" v-if="card.description"> {{ card.description }}</p>
-    </div>
   </div>
 </template>
 
