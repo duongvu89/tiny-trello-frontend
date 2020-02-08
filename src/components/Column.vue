@@ -3,7 +3,7 @@
     <header>
       <h3>{{ name }}</h3>
     </header>
-    <draggable @end="onEnd" group="cards" v-model="columnCards">
+    <draggable @end="onEnd" @move="onMove" group="cards" v-model="columnCards">
       <Card :card="card" :key="card.id" :status="card.status" v-for="card in columnCards"></Card>
     </draggable>
   </div>
@@ -32,8 +32,16 @@
     },
     methods: {
       onEnd: function (evt) {
-        console.log(evt.to.parentNode.getAttributeNode("status").value);
-
+        const cardIndex = evt.oldIndex;
+        const oldStatus = evt.item.getAttributeNode("status").value;
+        const newStatus = evt.to.parentNode.getAttributeNode("status").value;
+        console.log(cardIndex);
+        console.log(oldStatus);
+        console.log(newStatus);
+        this.$emit('update-card', cardIndex, oldStatus, newStatus);
+      },
+      onMove: function () {
+        return false;
       },
     }
   }
