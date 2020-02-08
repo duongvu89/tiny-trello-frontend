@@ -17,49 +17,53 @@
 
   export default {
     name: 'Board',
-    components: { Column },
+    components: {Column},
     props: {
       msg: String,
     },
     computed: {
       todoCards: function () {
-        if (!this.cards) return [];
         return this.cards.filter(card => card.status === 'TODO');
       },
       doingCards: function () {
-        if (!this.cards) return [];
         return this.cards.filter(card => card.status === 'DOING');
       },
       doneCards: function () {
-        if (!this.cards) return [];
         return this.cards.filter(card => card.status === 'DONE');
       },
     },
-    data() {
+    data: function () {
       return {
-        cards: null,
+        cards: [],
       }
     },
-    mounted() {
+    mounted: function () {
+      // Fetch data
       this.axios
               .get('http://localhost:8081/api/card')
               .then(response => {
                 this.cards = response.data
               })
+              .catch(error => {
+                console.error('Error fetch cards: ' + error.message);
+              })
     },
     methods: {
-      updateCard(cardIndexInComputedList, oldStatus, newStatus) {
-        console.log('Card' + this.getCardByIndexInComputedList(cardIndexInComputedList, oldStatus).description);
-        console.log('Card Index' + cardIndexInComputedList);
-        console.log('New status' + newStatus);
+      updateCard: function (card, newStatus) {
+        const oldStatus = card.status;
+        card.status = newStatus;
+        this.axios
+                .put('http://localhost:8081/api/card/' + card.id, card)
+                .then(response => {
+                  console.log('Successfully update card: ' + JSON.stringify(response.status));
+                })
+                .catch(error => {
+                  // In case of error, revert drag & drop
+                  card.status = oldStatus;
+                  console.log('Error update card: ' + error.message);
+                });
       },
-      getCardByIndexInComputedList: function (cardIndex, status) {
-        if (!this.cards) return null;
-        return this.cards.filter(card => card.status === status)[cardIndex];
-      },
-
     }
-
   }
 </script>
 

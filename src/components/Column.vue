@@ -3,7 +3,7 @@
     <header>
       <h3>{{ name }}</h3>
     </header>
-    <draggable @end="onEnd" @move="onMove" group="cards" v-model="columnCards">
+    <draggable group="cards" v-model="columnCards" @end="onDragEnd">
       <Card :card="card" :key="card.id" :status="card.status" v-for="card in columnCards"></Card>
     </draggable>
   </div>
@@ -17,31 +17,33 @@
     name: 'Column',
     components: {Card, draggable},
     props: {
-      name,
+      name: null,
       cards: null,
       status: null,
     },
-    data() {
+    // Works with watch
+    watch: {
+      cards: function (newCards) {
+        this.columnCards = newCards;
+      }
+    },
+    data: function () {
       return {
         columnCards: null
       }
     },
-    mounted() {
-      this.columnCards = [...this.cards];
-      console.log(this.columnCards);
-    },
     methods: {
-      onEnd: function (evt) {
-        const cardIndex = evt.oldIndex;
-        const oldStatus = evt.item.getAttributeNode("status").value;
+      onDragEnd: function (evt) {
+        const draggedCard = this.cards[evt.oldIndex];
         const newStatus = evt.to.parentNode.getAttributeNode("status").value;
-        console.log(cardIndex);
-        console.log(oldStatus);
-        console.log(newStatus);
-        this.$emit('update-card', cardIndex, oldStatus, newStatus);
-      },
-      onMove: function () {
-        return false;
+        if (draggedCard.status === newStatus) {
+          // Prevent sorting
+          this.columnCards = this.cards;
+        } else {
+          // Emit db update
+          this.$emit('update-card', draggedCard, newStatus);
+        }
+
       },
     }
   }
