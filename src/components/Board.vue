@@ -1,5 +1,11 @@
 <template>
   <div class="board-container">
+    <button id="show-modal" @click="showModal = true">
+      Create
+    </button>
+    <modal-new-card v-if="showModal" @save="createCard" @close="showModal = false" :show-error="showError">
+      <h3 slot="header">custom header</h3>
+    </modal-new-card>
     <div class="board">
       <Column :cards="todoCards" :key="1" @update-card="updateCard" name="TO DO" status="TODO">
       </Column>
@@ -14,10 +20,11 @@
 
 <script>
   import Column from './Column.vue'
+  import ModalNewCard from "./ModalNewCard.vue"
 
   export default {
     name: 'Board',
-    components: {Column},
+    components: { Column, ModalNewCard },
     props: {
       msg: String,
     },
@@ -35,6 +42,8 @@
     data: function () {
       return {
         cards: [],
+        showModal: false,
+        showError: false,
       }
     },
     mounted: function () {
@@ -49,6 +58,24 @@
               })
     },
     methods: {
+      createCard: function (description) {
+        console.log(description);
+        if (!description || description.trim() === '') return;
+        let card = {description: description.trim(), status: 'TODO'};
+        this.axios
+                .post('http://localhost:8081/api/card', card)
+                .then(response => {
+                  this.showModal = false;
+                  this.showError = false;
+                  console.log('Successfully create card: ' + JSON.stringify(response.data));
+                  card.id = response.data;
+                  this.cards.push(card);
+                })
+                .catch(error => {
+                  console.log('Error create card: ' + error.message);
+                  this.showError = true;
+                });
+      },
       updateCard: function (card, newStatus) {
         const oldStatus = card.status;
         card.status = newStatus;
