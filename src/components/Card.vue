@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-      <p class="card-description" v-if="card.description"> {{ card.description }}</p>
+      <p v-if="card.description"> {{ card.description }}</p>
   </div>
 </template>
 
@@ -11,7 +11,6 @@
       card: Object
     },
   }
-
 </script>
 
 <style scoped>
@@ -22,5 +21,6 @@
     background-color: white;
     margin: 5px;
     padding: 5px;
+    color: #172b4d;
   }
 </style>

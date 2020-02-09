@@ -1,35 +1,32 @@
 <template>
   <div :status="status" class="column">
-    <header>
-      <h3>{{ name }}</h3>
-    </header>
+    <h4>{{ name }}</h4>
     <draggable group="cards" v-model="columnCards" @end="onDragEnd">
-      <Card :card="card" :key="card.id" :status="card.status" v-for="card in columnCards"></Card>
+      <card v-for="card in columnCards" :key="card.id" :card="card" :status="card.status" ></card>
     </draggable>
   </div>
 </template>
 
 <script>
   import Card from './Card.vue'
-  import draggable from "vuedraggable";
+  import Draggable from "vuedraggable";
 
   export default {
     name: 'Column',
-    components: {Card, draggable},
+    components: {Card, Draggable},
     props: {
-      name: null,
-      cards: null,
-      status: null,
-    },
-    // Works with watch
-    watch: {
-      cards: function (newCards) {
-        this.columnCards = newCards;
-      }
+      name: String,
+      cards: Array,
+      status: String,
     },
     data: function () {
       return {
         columnCards: null
+      }
+    },
+    watch: {
+      cards: function (newCards) {
+        this.columnCards = newCards;
       }
     },
     methods: {
@@ -43,16 +40,24 @@
           // Emit db update
           this.$emit('update-card', draggedCard, newStatus);
         }
-
       },
     }
   }
 </script>
+
 <style scoped>
   .column {
-    flex: 30%;
+    flex: 1;
     padding: 5px;
-    height: 400px;
-    background-color: lightgrey;
+    min-height: 500px;
+    background-color: aliceblue;
+    margin: 0 2px;
+    border-radius: 3px;
+    font-family: sans-serif;
+    font-size: 14px;
+  }
+  .column h4 {
+    margin: 10px;
+    color: #42b983;
   }
 </style>

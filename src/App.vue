@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <Board msg="Welcome to Tiny Trello Web App"/>
+    <div class="title">TINY<img alt="Vue logo" src="./assets/logo.png">TRELLO</div>
+    <board/>
   </div>
 </template>
 
@@ -17,12 +17,20 @@
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+
+  .title {
+    font-size: 38px;
+    font-family: cursive;
+  }
+  .title > img {
+    height: 30px;
+    margin: 0 5px;
+  }
 </style>

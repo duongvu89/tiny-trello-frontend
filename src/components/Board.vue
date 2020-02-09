@@ -1,32 +1,44 @@
 <template>
-  <div class="board-container">
-    <button id="show-modal" @click="showModal = true">
-      Create
-    </button>
-    <modal-new-card v-if="showModal" @save="createCard" @close="showModal = false" :show-error="showError">
-      <h3 slot="header">custom header</h3>
-    </modal-new-card>
-    <div class="board">
-      <Column :cards="todoCards" :key="1" @update-card="updateCard" name="TO DO" status="TODO">
-      </Column>
-      <Column :cards="doingCards" :key="2" @update-card="updateCard" name="DOING" status="DOING">
-      </Column>
-      <Column :cards="doneCards" :key="3" @update-card="updateCard" name="DONE" status="DONE">
-      </Column>
+  <section>
+    <div class="button-create">
+      <div class="board-header">
+        <div>
+          <p v-if="showUpdateError" class="error-message">Error updating cards!</p>
+          <p v-else-if="showFetchError" class="error-message">Error fetching cards!</p>
+        </div>
+        <button id="show-modal" @click="showModal = true">
+          Create
+        </button>
+      </div>
     </div>
-  </div>
-
+    <card-modal v-if="showModal" @save="createCard" @close="showModal = false" :show-error="showCreateError">
+    </card-modal>
+    <div class="board">
+      <column :cards="todoCards" :key="1" @update-card="updateCard" name="To Do" status="TODO">
+      </column>
+      <column :cards="doingCards" :key="2" @update-card="updateCard" name="Doing" status="DOING">
+      </column>
+      <column :cards="doneCards" :key="3" @update-card="updateCard" name="Done" status="DONE">
+      </column>
+    </div>
+  </section>
 </template>
 
 <script>
   import Column from './Column.vue'
-  import ModalNewCard from "./ModalNewCard.vue"
+  import CardModal from "./CardModal.vue"
 
   export default {
     name: 'Board',
-    components: { Column, ModalNewCard },
-    props: {
-      msg: String,
+    components: { Column, CardModal },
+    data: function () {
+      return {
+        cards: [],
+        showModal: false,
+        showCreateError: false,
+        showFetchError: false,
+        showUpdateError: false
+      }
     },
     computed: {
       todoCards: function () {
@@ -39,13 +51,6 @@
         return this.cards.filter(card => card.status === 'DONE');
       },
     },
-    data: function () {
-      return {
-        cards: [],
-        showModal: false,
-        showError: false,
-      }
-    },
     mounted: function () {
       // Fetch data
       this.axios
@@ -54,26 +59,26 @@
                 this.cards = response.data
               })
               .catch(error => {
-                console.error('Error fetch cards: ' + error.message);
+                console.error('Error fetching cards: ' + error.message);
+                this.showFetchError = true;
               })
     },
     methods: {
       createCard: function (description) {
-        console.log(description);
         if (!description || description.trim() === '') return;
         let card = {description: description.trim(), status: 'TODO'};
         this.axios
                 .post('http://localhost:8081/api/card', card)
                 .then(response => {
                   this.showModal = false;
-                  this.showError = false;
-                  console.log('Successfully create card: ' + JSON.stringify(response.data));
+                  this.showCreateError = false;
+                  console.log('Successfully create card.');
                   card.id = response.data;
                   this.cards.push(card);
                 })
                 .catch(error => {
-                  console.log('Error create card: ' + error.message);
-                  this.showError = true;
+                  console.log('Error creating card: ' + error.message);
+                  this.showCreateError = true;
                 });
       },
       updateCard: function (card, newStatus) {
@@ -82,12 +87,13 @@
         this.axios
                 .put('http://localhost:8081/api/card/' + card.id, card)
                 .then(response => {
-                  console.log('Successfully update card: ' + JSON.stringify(response.status));
+                  console.log('Successfully update card: ' + response.status);
                 })
                 .catch(error => {
                   // In case of error, revert drag & drop
                   card.status = oldStatus;
-                  console.log('Error update card: ' + error.message);
+                  this.showUpdateError = true;
+                  console.log('Error updating card: ' + error.message);
                 });
       },
     }
@@ -95,7 +101,30 @@
 </script>
 
 <style scoped>
+  .board-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .error-message {
+    color: red;
+    font-size: 13px;
+  }
+
   .board {
     display: flex;
+    flex-direction: row;
+  }
+
+  .button-create {
+    text-align: right;
+  }
+  .button-create button {
+    background-color: #42b983;
+    border: none;
+    color: white;
+    padding: 7px 12px;
+    font-size: 15px;
+    margin: 4px 2px;
   }
 </style>

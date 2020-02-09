@@ -1,5 +1,5 @@
 <template type="text/x-template" id="modal-template">
-    <transition name="modal-new-card">
+    <transition name="card-modal">
         <div class="modal-mask">
             <div class="modal-wrapper">
                 <div class="modal-container">
@@ -12,7 +12,7 @@
 
                     <div class="modal-footer">
                         <div>
-                            <span v-if="showError" class="error-message">Error occur!</span>
+                            <p v-if="showError" class="error-message">Error occur!</p>
                         </div>
                         <div class="buttons">
                             <button class="modal-default-button" @click="$emit('save', description)">
@@ -31,9 +31,9 @@
 
 <script>
     export default {
-        name: 'ModalNewCard',
+        name: 'CardModal',
         props: {
-            showError: String,
+            showError: Boolean,
         },
         data: function () {
             return {
@@ -88,6 +88,7 @@
         border: none;
         outline: none;
         border-radius: 2px;
+        color: #172b4d;
     }
 
     .modal-footer {
@@ -95,11 +96,14 @@
         flex-direction: row;
         justify-content: space-between;
     }
-
     .buttons > button {
-        margin: 3px;
+        background-color: #42b983;
+        border: none;
+        color: white;
+        padding: 8px 12px;
+        font-size: 13px;
+        margin: 0 2px;
     }
-
     .error-message {
         color: red;
         font-size: 13px;
@@ -127,5 +131,4 @@
         -webkit-transform: scale(1.1);
         transform: scale(1.1);
     }
-
 </style>
