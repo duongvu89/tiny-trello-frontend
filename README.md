@@ -1,24 +1,14 @@
 # tiny-trello-frontend
 
 ## Project setup
+>This app is developing on latest npm, node & Vue.js.
+>Please try with latest versions if older ones don't work for you ;)
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles and run
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
