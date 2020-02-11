@@ -114,6 +114,12 @@
   .board {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    min-height: 500px;
+    background-color: aliceblue;
+    padding: 5px;
+    border-radius: 3px;
   }
 
   .button-create {

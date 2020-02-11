@@ -49,8 +49,7 @@
   .column {
     flex: 1;
     padding: 5px;
-    min-height: 500px;
-    background-color: aliceblue;
+    background-color: powderblue;
     margin: 0 2px;
     border-radius: 3px;
     font-family: sans-serif;
